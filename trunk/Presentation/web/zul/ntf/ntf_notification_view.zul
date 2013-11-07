@@ -1,0 +1,135 @@
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/zul/templates/main_template.zul"?>
+<?page viewport="width=device-width, initial-scale=0.5, user-scalable=yes"?>
+<?page title="${labels.template.title}"?>
+<?root-attributes lang="en"xml:lang="en"?>
+<?link rel="shortcut icon" type="image/x-icon" href="/img/logo.png"?>
+<?link rel="icon" type="image/x-icon" href="/img/logo.png"?>
+<window xmlns="http://www.zkoss.org/2005/zul"
+        self="@define(detail)"
+        border="none"
+        width="1200px"
+        apply="org.zkoss.bind.BindComposer"
+        viewModel="@id('vm') @init('org.teiath.web.vm.ntf.ViewNotificationVM')"
+		>
+
+	<style>
+		tr.z-row-over > td.z-row-inner {
+		border-bottom: 1px dotted #434E9E;
+		border-top: 1px dotted #434E9E;
+		}
+
+		tr.z-row-over > td.z-row-inner, tr.z-row-over > .z-cell {
+		background-image: none;
+		}
+	</style>
+	<div sclass="detail">
+		<div align="left" width="99%">
+			<hbox width="100%" widths="50%, 50%">
+				<label sclass="headerText" value="${labels.notifications.view}" />
+				<div width="100%" style="text-align: right">
+					<toolbarbutton image="/img/back.png" onClick="@command('onBack')" />
+					<toolbarbutton image="/img/transition.png" onClick="@command('onTransition')" />
+				</div>
+			</hbox>
+			<separator height="20px" />
+			<grid style="border: 0">
+				<columns>
+					<column width="20%" />
+					<column width="30%" />
+					<column width="20%" />
+					<column width="30%" />
+				</columns>
+				<rows>
+					<row spans="1, 3" sclass="viewRow">
+						<label width="100%" sclass="labelNSGrayNormal" value="${labels.notifications.dateTime}:" />
+						<label value="@load(vm.notification.sentDate) @converter('formatedDate', format='dd/MM/yyyy : HH:mm')"
+						       sclass="labelNSBlackNormal" width="90%" />
+					</row>
+					<row spans="1, 3" sclass="viewRow">
+						<label width="100%" sclass="labelNSGrayNormal" value="${labels.notifications.title}:" />
+						<label value="@load(vm.notification.title)" sclass="labelNSBlackNormal" width="90%" />
+					</row>
+					<row spans="1, 3" sclass="viewRow">
+						<label width="100%" sclass="labelNSGrayNormal" value="${labels.notifications.text}:" />
+						<label value="@load(vm.notification.body)" sclass="labelNSBlackNormal" width="90%" />
+					</row>
+				</rows>
+			</grid>
+			<separator height="50px" />
+			<label id="action.inputs" value="${labels.listing.inputs}"
+			       style="padding-left: 10px; font-size: 20px"
+			       width="90%" />
+			<separator height="10px" />
+			<grid style="border: 0">
+				<columns>
+					<column width="20%" />
+					<column width="30%" />
+					<column width="20%" />
+					<column width="30%" />
+				</columns>
+				<rows>
+					<row spans="1, 3" sclass="viewRow">
+						<label width="100%" sclass="labelNSGrayNormal" value="${labels.listing.code}:" />
+						<label value="@load(vm.notification.listing.code)" sclass="labelNSBlackNormal" width="90%" />
+					</row>
+					<row spans="1, 3" sclass="viewRow">
+						<label width="100%" sclass="labelNSGrayNormal"
+						       value="${labels.listing.transactionType}:" />
+						<label value="@load(vm.notification.listing.transactionType.name)" sclass="labelNSBlackNormal"
+						       width="90%" />
+					</row>
+					<row spans="1, 3" sclass="viewRow">
+						<label width="100%" sclass="labelNSGrayNormal"
+						       value="${labels.listing.productCategory}:" />
+						<label value="@load(vm.notification.listing.productCategory.name)" sclass="labelNSBlackNormal"
+						       width="90%" />
+					</row>
+					<row spans="1, 3" sclass="viewRow">
+						<label width="100%" sclass="labelNSGrayNormal" value="${labels.listing.productName}:" />
+						<label value="@load(vm.notification.listing.productName)" sclass="labelNSBlackNormal" width="90%" />
+					</row>
+					<row spans="1, 3" sclass="viewRow">
+						<label width="100%" sclass="labelNSGrayNormal"
+						       value="${labels.listing.productBrand}:" />
+						<label value="@load(vm.notification.listing.productBrand)" sclass="labelNSBlackNormal" width="90%" />
+					</row>
+					<row spans="1, 3" sclass="viewRow">
+						<label width="100%" sclass="labelNSGrayNormal"
+						       value="${labels.listing.productStatus}:" />
+						<label sclass="labelNSBlackNormal" width="90%"
+						       value="@load(vm.notification.listing.productStatus.name)" />
+					</row>
+					<row spans="1, 3" sclass="viewRow">
+						<label width="100%" sclass="labelNSGrayNormal"
+						       value="${labels.listing.productPurchaseDate}:" />
+						<label value="@load(vm.notification.listing.purchaseDate) @converter('formatedDate', format='dd/MM/yyyy')"
+						       sclass="labelNSBlackNormal" width="90%" />
+					</row>
+					<row id="priceRow" spans="1, 3" sclass="viewRow" visible="true">
+						<label width="100%" sclass="labelNSGrayNormal"
+						       value="${labels.listing.productPrice}:" />
+						<label value="@load(vm.notification.listing.price) @converter('formatedNumber', format='###,##0.00')"
+						       sclass="labelNSBlackNormal" width="90%" />
+					</row>
+				</rows>
+			</grid>
+
+			<separator height="50px" />
+			<label id="notificationCriteriaLabel" visible="false" value="${labels.notificationsCriteria.values}" style="padding-left: 10px; font-size: 20px"
+			       width="90%" />
+			<separator height="10px" />
+			<grid style="border: 0">
+				<columns>
+					<column width="20%" />
+					<column width="30%" />
+					<column width="20%" />
+					<column width="30%" />
+				</columns>
+				<rows id="notificationCriteriaDetails">
+				</rows>
+			</grid>
+		</div>
+	</div>
+
+</window>

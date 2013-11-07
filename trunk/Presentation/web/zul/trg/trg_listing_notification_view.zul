@@ -1,0 +1,134 @@
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/zul/templates/main_template.zul"?>
+<?page viewport="width=device-width, initial-scale=0.5, user-scalable=yes"?>
+<?page title="${labels.template.title}"?>
+<?root-attributes lang="en"xml:lang="en"?>
+<?link rel="shortcut icon" type="image/x-icon" href="/img/logo.png"?>
+<?link rel="icon" type="image/x-icon" href="/img/logo.png"?>
+<window xmlns="http://www.zkoss.org/2005/zul"
+        id="listingViewSellerWin"
+        self="@define(detail)"
+        border="none"
+        width="1200px"
+        apply="org.zkoss.bind.BindComposer"
+        viewModel="@id('vm') @init('org.teiath.web.vm.trg.ViewListingNotificationSellerVM')">
+
+	<style>
+		tr.z-row-over > td.z-row-inner {
+		border-bottom: 1px dotted #434E9E;
+		border-top: 1px dotted #434E9E;
+		}
+
+		tr.z-row-over > td.z-row-inner, tr.z-row-over > .z-cell {
+		background-image: none;
+		}
+	</style>
+	<div sclass="detail">
+		<div align="left" width="99%">
+			<hbox width="100%" widths="50%, 50%">
+				<label sclass="headerText" value="${labels.listing.view}" />
+				<div width="100%" style="text-align: right">
+					<toolbarbutton image="/img/back.png" onClick="@command('onBack')" />
+				</div>
+			</hbox>
+			<separator height="20px" />
+			<hlayout width="100%">
+				<div style="border: 1px solid black">
+					<vbox id="photoVBox">
+
+					</vbox>
+				</div>
+				<space width="5px" />
+				<div style="padding-top: 5px">
+					<label value="@load(vm.listing.productName)" style="font-size: 30px" width="90%" />
+					<separator height="20px" />
+					<grid style="border: 0">
+						<columns>
+							<column width="20%" />
+							<column width="30%" />
+							<column width="20%" />
+							<column width="30%" />
+						</columns>
+						<rows>
+							<row spans="1, 3" sclass="viewRow">
+								<label width="100%" sclass="labelNSGrayNormal"
+								       value="${labels.listing.transactionType}:" />
+								<label value="@load(vm.listing.transactionType.name)" sclass="labelNSBlackNormal"
+								       width="90%" />
+							</row>
+							<row spans="1,1" sclass="viewRow" id="exchangeRow" visible="false">
+								<label width="100%" sclass="labelNSGrayNormal" value="${labels.common.goods}:" />
+								<grid style="border: 0" model="@load(vm.tradeableGoods)">
+									<columns>
+										<column width="1000%" />
+									</columns>
+									<template name="model">
+										<row sclass="viewRow">
+											<label value="${each.name}" />
+										</row>
+									</template>
+								</grid>
+							</row>
+							<row spans="1, 3" sclass="viewRow">
+								<label width="100%" sclass="labelNSGrayNormal"
+								       value="${labels.listing.productCategory}:" />
+								<label value="@load(vm.listing.productCategory.name)" sclass="labelNSBlackNormal"
+								       width="90%" />
+							</row>
+							<row spans="1, 3" sclass="viewRow">
+								<label width="100%" sclass="labelNSGrayNormal" value="${labels.listing.productName}:" />
+								<label value="@load(vm.listing.productName)" sclass="labelNSBlackNormal" width="90%" />
+							</row>
+							<row spans="1, 3" sclass="viewRow">
+								<label width="100%" sclass="labelNSGrayNormal"
+								       value="${labels.listing.productBrand}:" />
+								<label value="@load(vm.listing.productBrand)" sclass="labelNSBlackNormal" width="90%" />
+							</row>
+							<row spans="1, 3" sclass="viewRow">
+								<label width="100%" sclass="labelNSGrayNormal"
+								       value="${labels.listing.productDescription}:" />
+								<label value="@load(vm.listing.productDescription)" sclass="labelNSBlackNormal"
+								       width="90%" />
+							</row>
+							<row spans="1, 3" sclass="viewRow">
+								<label width="100%" sclass="labelNSGrayNormal"
+								       value="${labels.listing.productStatus}:" />
+								<label sclass="labelNSBlackNormal" width="90%"
+								       value="@load(vm.listing.productStatus.name)" />
+							</row>
+							<row spans="1, 3" sclass="viewRow">
+								<label width="100%" sclass="labelNSGrayNormal"
+								       value="${labels.listing.productPurchaseDate}:" />
+								<label value="@load(vm.listing.purchaseDate) @converter('formatedDate', format='dd/MM/yyyy')"
+								       sclass="labelNSBlackNormal" width="90%" />
+							</row>
+							<row id="priceRow" spans="1, 3" sclass="viewRow" visible="true">
+								<label width="100%" sclass="labelNSGrayNormal"
+								       value="${labels.listing.productPrice}:" />
+								<label value="@load(vm.listing.price)" sclass="labelNSBlackNormal" width="90%" />
+							</row>
+							<row spans="1, 3" sclass="viewRow">
+								<label width="100%" sclass="labelNSGrayNormal" value="${labels.listing.sendHome}:" />
+								<label id="sendHomeLabel" value="${labels.common.no}" sclass="labelNSBlackNormal"
+								       width="90%" />
+							</row>
+							<row spans="1, 3" sclass="viewRow">
+								<label width="100%" sclass="labelNSGrayNormal"
+								       value="${labels.listing.productComments}:" />
+								<label value="@load(vm.listing.comments)" sclass="labelNSBlackNormal" width="90%" />
+							</row>
+							<row spans="1, 3" sclass="viewRow">
+								<label width="100%" sclass="labelNSGrayNormal" value="${labels.listing.interests}:" />
+								<label value="@load(vm.listing.interests)" sclass="labelNSBlackNormal" width="90%" />
+							</row>
+						</rows>
+					</grid>
+				</div>
+			</hlayout>
+			<separator height="20px" />
+			<hbox width="100%" widths="25%, 25%, 25%, 25%" id="imageLibrary" />
+			<separator height="20px" />
+			<separator height="20px" />
+		</div>
+	</div>
+</window>

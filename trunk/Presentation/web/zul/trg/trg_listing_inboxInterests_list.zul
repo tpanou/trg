@@ -1,0 +1,101 @@
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/zul/templates/main_template.zul"?>
+<?page viewport="width=device-width, initial-scale=0.5, user-scalable=yes"?>
+<?page title="${labels.template.title}"?>
+<?root-attributes lang="en"xml:lang="en"?>
+<?link rel="shortcut icon" type="image/x-icon" href="/img/logo.png"?>
+<?link rel="icon" type="image/x-icon" href="/img/logo.png"?>
+<window xmlns="http://www.zkoss.org/2005/zul" xmlns:h="http://www.w3.org/1999/xhtml"
+        self="@define(detail)"
+        border="none"
+        width="1200px"
+        apply="org.zkoss.bind.BindComposer"
+        viewModel="@id('vm') @init('org.teiath.web.vm.trg.ListListingInboxInterestsVM')">
+
+	<zscript><![CDATA[
+
+      import java.util.Comparator;
+      import org.teiath.web.comparator.ListboxEmptyComparator;
+
+      Comparator comparator = new ListboxEmptyComparator();
+  ]]></zscript>
+
+	<script>
+		function doLoad(ownerval) {
+		$('.rateitowner').rateit({
+		step: 1,
+		starwidth: 16,
+		starheight: 16,
+		readonly: true,
+		value: ownerval
+		});
+		}
+	</script>
+
+	<style>
+		tr.z-row-over > td.z-row-inner {
+		border-bottom: 1px dotted #434E9E;
+		border-top: 1px dotted #434E9E;
+		}
+
+		tr.z-row-over > td.z-row-inner, tr.z-row-over > .z-cell {
+		background-image: none;
+		}
+	</style>
+	<div sclass="detail">
+		<div align="left" width="99%">
+			<hbox width="100%" widths="50%, 50%">
+				<label sclass="headerText" value="${labels.listingInterest.inbox}" />
+			</hbox>
+			<separator height="20px" />
+			<div align="right">
+				<hbox>
+					<toolbarbutton id="viewButton" image="/img/view.png" onClick="@command('onView')"
+					               disabled="@load(empty vm.selectedListingInterest)" />
+					<toolbarbutton id="acceptButton" image="/img/accept.png"
+					               onClick="@command('onAccept')" disabled="@load(empty vm.selectedListingInterest)" />
+					<toolbarbutton id="rejectButton" image="/img/decline.png"
+					               onClick="@command('onReject')" disabled="@load(empty vm.selectedListingInterest)" />
+					<toolbarbutton image="/img/print.png"
+					               onClick="@command('onPrintPDF')" />
+				</hbox>
+			</div>
+			<separator height="5px" />
+			<listbox model="@load(vm.listingInterestsList)" paginal="@{paging}"
+			         selectedItem="@bind(vm.selectedListingInterest)"
+			         id="listingsListbox" width="100%" context="contextPopup">
+				<listhead>
+					<listheader id="interestDate" label="${labels.common.date}" width="15%"
+					            style="background:#32312F;color:white;border-style:solid;text-align: center;white-space: normal;"
+					            sortAscending="${comparator}"
+					            sortDescending="${comparator}" onSort="@command('onSort')" />
+					<listheader label="${labels.listing.code}" width="15%"
+					            style="background:#32312F;color:white;border-style:solid;text-align: center;white-space: normal;" />
+					<listheader label="${labels.listing.productName}" width="20%"
+					            style="background:#32312F;color:white;border-style:solid;text-align: center;white-space: normal;" />
+					<listheader label="${labels.listingInterest.userLastname}" width="20%"
+					            style="background:#32312F;color:white;border-style:solid;text-align: center;white-space: normal;" />
+					<listheader label="${labels.listingInterest.userΝame}" width="18%"
+					            style="background:#32312F;color:white;border-style:solid;text-align: center;white-space: normal;" />
+					<listheader label="${labels.listingInterest.userTotalRating}" width="12%"
+					            style="background:#32312F;color:white;border-style:solid;text-align: center;white-space: normal;"
+					            sortAscending="${comparator}"
+					            sortDescending="${comparator}" onSort="@command('onSort')" />
+				</listhead>
+				<template name="model" var="item">
+					<listitem>
+						<listcell label="@load(item.interestDate) @converter('formatedDate', format='dd/MM/yyyy')"
+						          style="text-align: center" />
+						<listcell label="${item.listing.code}" style="text-align: center" />
+						<listcell label="${item.listing.productName}" style="text-align: center" />
+						<listcell label="${item.user.lastName}" style="text-align: center" />
+						<listcell label="${item.user.firstName}" style="text-align: center" />
+						<listcell label="@load(item.user.averageTransactionRating) @converter('formatedNumber', format='###,##0.00')" style="text-align: center" />
+					</listitem>
+				</template>
+			</listbox>
+			<label id="empty" value="${labels.reservation.noInterest}" visible="false"></label>
+			<paging id="paging" mold="os" pageSize="10" detailed="true" onPaging="@command('onPaging')" />
+		</div>
+	</div>
+</window>
