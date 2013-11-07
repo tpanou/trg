@@ -1,0 +1,138 @@
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/zul/templates/main_template.zul"?>
+<?page viewport="width=device-width, initial-scale=0.5, user-scalable=yes"?>
+<?page title="${labels.template.title}"?>
+<?root-attributes lang="en"xml:lang="en"?>
+<?link rel="shortcut icon" type="image/x-icon" href="/img/logo.png"?>
+<?link rel="icon" type="image/x-icon" href="/img/logo.png"?>
+<window xmlns="http://www.zkoss.org/2005/zul"
+        self="@define(detail)"
+        border="none"
+        width="1200px"
+        apply="org.zkoss.bind.BindComposer"
+        viewModel="@id('vm') @init('org.teiath.web.vm.trg.CreateListingInterestVM')"
+        validationMessages="@id('vmsgs')">
+
+	<style>
+		tr.z-row-over > td.z-row-inner {
+		border-bottom: 1px solid #FFFFFF;
+		border-top: 1px solid #FFFFFF;
+		}
+
+		tr.z-row-over > td.z-row-inner, tr.z-row-over > .z-cell {
+		background-image: none;
+		}
+	</style>
+	<div form="@id('fx') @load(vm.listingInterest) @save(vm.listingInterest, before='onSave')" sclass="detail">
+		<div align="left" width="99%">
+			<hbox width="100%" widths="@load(not empty fx.id? '50%, 50%': '50%, 50%')">
+				<label sclass="headerText" value="${labels.listingInterest.send}" />
+				<div width="100%" style="text-align: right">
+					<toolbarbutton image="/img/submit.png" onClick="@command('onSave')" />
+					<toolbarbutton image="/img/cancel.png" onClick="@command('onCancel')" />
+				</div>
+			</hbox>
+			<separator height="20px" />
+			<hlayout width="100%">
+				<vlayout>
+					<div style="border: 1px solid black">
+						<vbox id="photoVBox">
+
+						</vbox>
+					</div>
+					<hlayout>
+						<toolbarbutton id="btnUploadMainImage" upload="true,maxsize=300" image="/img/upload.png"
+						               onUpload="@command('uploadMainImage')" />
+						<toolbarbutton id="btnDeleteMainImage" image="/img/delete.png"
+						               onClick="@command('deleteMainImage')" />
+					</hlayout>
+				</vlayout>
+				<space width="50px" />
+				<div style="padding-top: 5px">
+					<grid oddRowSclass="non-odd" style="border: 0">
+						<columns>
+							<column width="20%" />
+							<column width="30%" />
+							<column width="20%" />
+							<column width="30%" />
+						</columns>
+						<rows>
+							<row spans="1, 3" sclass="viewRow">
+								<label width="100%" sclass="labelNSGrayNormal"
+								       value="${labels.listingInterest.tradeableGood}*:" />
+								<vbox>
+									<hbox>
+										<combobox readonly="true" model="@load(vm.tradeableGoods)"
+										          selectedItem="@bind(vm.selectedTradeableGood)" width="99%"
+										          tabindex="2">
+											<template name="model" var="item">
+												<comboitem label="@load(item.name)" />
+											</template>
+										</combobox>
+									</hbox>
+								</vbox>
+							</row>
+							<row spans="1, 3" sclass="viewRow">
+								<label width="100%" sclass="labelNSGrayNormal"
+								       value="${labels.listing.productBrand}:" />
+								<vbox>
+									<hbox>
+										<textbox maxlength="20" width="200px" tabindex="1" mold="rounded"
+										         value="@bind(vm.tradeableGood.brand)" />
+									</hbox>
+								</vbox>
+							</row>
+							<row spans="1, 3" sclass="viewRow">
+								<label width="100%" sclass="labelNSGrayNormal"
+								       value="${labels.listing.productDescription}:" />
+								<vbox>
+									<hbox>
+										<textbox rows="4" multiline="true" maxlength="300" width="200px"
+										         tabindex="1" mold="rounded"
+										         value="@bind(vm.tradeableGood.description)" />
+									</hbox>
+								</vbox>
+							</row>
+							<row spans="1, 3" sclass="viewRow">
+								<label width="100%" sclass="labelNSGrayNormal"
+								       value="${labels.listing.productStatus}:" />
+								<vbox>
+									<hbox>
+										<combobox readonly="true" model="@load(vm.productStatuses)"
+										          selectedItem="@bind(vm.tradeableGood.productStatus)"
+										          width="99%" tabindex="2">
+											<template name="model" var="item">
+												<comboitem label="@load(item.name)" />
+											</template>
+										</combobox>
+									</hbox>
+								</vbox>
+							</row>
+							<row spans="1, 3" sclass="viewRow">
+								<label width="100%" sclass="labelNSGrayNormal"
+								       value="${labels.listing.productPurchaseYear}:" />
+								<vbox>
+									<hbox>
+										<datebox id="date" cols="12" format="short" mold="rounded" width="230px"
+										         value="@bind(vm.tradeableGood.purchaseDate)" />
+									</hbox>
+								</vbox>
+							</row>
+							<row spans="1, 3" sclass="viewRow">
+								<vbox>
+									<label width="100%" sclass="labelNSGrayNormal"
+									       value="${labels.listing.productComments}:" />
+									<hbox>
+										<textbox id="comment" rows="4" multiline="true" maxlength="300"
+										         width="200px"
+										         tabindex="1" mold="rounded" value="@bind(vm.tradeableGood.comments)" />
+									</hbox>
+								</vbox>
+							</row>
+						</rows>
+					</grid>
+				</div>
+			</hlayout>
+		</div>
+	</div>
+</window>

@@ -1,0 +1,187 @@
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/zul/templates/main_template.zul"?>
+<?page viewport="width=device-width, initial-scale=0.5, user-scalable=yes"?>
+<?page title="${labels.template.title}"?>
+<?root-attributes lang="en"xml:lang="en"?>
+<?link rel="shortcut icon" type="image/x-icon" href="/img/logo.png"?>
+<?link rel="icon" type="image/x-icon" href="/img/logo.png"?>
+<window xmlns="http://www.zkoss.org/2005/zul"
+        xmlns:h="http://www.w3.org/1999/xhtml"
+        id="listingViewSellerWin"
+        self="@define(detail)"
+        border="none"
+        width="1200px"
+        apply="org.zkoss.bind.BindComposer"
+        viewModel="@id('vm') @init('org.teiath.web.vm.trg.ViewListingHistoryVM')">
+
+	<script>
+		function doLoad(ownerval, interval) {
+		$('.rateitowner').rateit({
+		step: 1,
+		starwidth: 16,
+		starheight: 16,
+		readonly: true,
+		value: ownerval
+		});
+
+		$('.rateitinter').rateit({
+		step: 1,
+		starwidth: 16,
+		starheight: 16,
+		readonly: true,
+		value: interval
+		});
+		}
+	</script>
+
+	<style>
+		tr.z-row-over > td.z-row-inner {
+		border-bottom: 1px dotted #434E9E;
+		border-top: 1px dotted #434E9E;
+		}
+
+		tr.z-row-over > td.z-row-inner, tr.z-row-over > .z-cell {
+		background-image: none;
+		}
+	</style>
+	<div sclass="detail">
+		<div align="left" width="99%">
+			<hbox width="100%" widths="50%, 50%">
+				<label sclass="headerText" value="${labels.transaction.view}" />
+				<div width="100%" style="text-align: right">
+					<toolbarbutton image="/img/back.png" onClick="@command('onBack')" />
+				</div>
+			</hbox>
+			<separator height="20px" />
+			<hlayout width="100%">
+				<vbox>
+					<div>
+						<vbox id="photoVBox">
+
+						</vbox>
+					</div>
+					<separator height="10px" />
+					<div>
+						<hbox width="100%" widths="25%, 25%, 25%, 25%" id="imageLibrary" />
+					</div>
+				</vbox>
+				<space width="5px" />
+				<space width="5px" />
+				<div style="padding-top: 5px">
+					<label value="@load(vm.transaction.listingInterest.listing.productName)" style="font-size: 30px"
+					       width="90%" />
+					<separator height="20px" />
+					<grid style="border: 0; width: 800px">
+						<columns>
+							<column width="20%" />
+							<column width="30%" />
+							<column width="20%" />
+							<column width="30%" />
+						</columns>
+						<rows>
+							<row spans="1, 3" sclass="viewRow">
+								<label width="100%" sclass="labelNSGrayNormal" value="${labels.listing.code}:" />
+								<label value="@load(vm.transaction.listing.code)" sclass="labelNSBlackNormal"
+								       width="90%" />
+							</row>
+							<row spans="1, 3" sclass="viewRow">
+								<label width="100%" sclass="labelNSGrayNormal" value="${labels.transaction.date}:" />
+								<label value="@load(vm.transaction.transactionDate) @converter('formatedDate', format='dd/MM/yyyy')"
+								       sclass="labelNSBlackNormal" width="90%" />
+							</row>
+							<row spans="1, 3" sclass="viewRow">
+								<label width="100%" sclass="labelNSGrayNormal"
+								       value="${labels.listing.transactionType}:" />
+								<label value="@load(vm.transaction.listingInterest.listing.transactionType.name)"
+								       sclass="labelNSBlackNormal" width="90%" />
+							</row>
+							<row spans="1,1" sclass="viewRow" id="exchangeRow" visible="false">
+								<label width="100%" sclass="labelNSGrayNormal" value="Ανταλλάχθηκε με:" />
+								<label value="@load(vm.transaction.listingInterest.tradeableGood.name)"
+								       sclass="labelNSBlackNormal" width="90%" />
+							</row>
+							<row spans="1, 3" sclass="viewRow">
+								<label width="100%" sclass="labelNSGrayNormal"
+								       value="${labels.listing.productCategory}:" />
+								<label value="@load(vm.transaction.listingInterest.listing.productCategory.name)"
+								       sclass="labelNSBlackNormal" width="90%" />
+							</row>
+							<row spans="1, 3" sclass="viewRow">
+								<label width="100%" sclass="labelNSGrayNormal" value="${labels.listing.productName}:" />
+								<label value="@load(vm.transaction.listingInterest.listing.productName)"
+								       sclass="labelNSBlackNormal" width="90%" />
+							</row>
+							<row spans="1, 3" sclass="viewRow">
+								<label width="100%" sclass="labelNSGrayNormal"
+								       value="${labels.listing.productDescription}:" />
+								<label value="@load(vm.transaction.listingInterest.listing.productDescription)"
+								       sclass="labelNSBlackNormal" width="90%" />
+							</row>
+							<row spans="1, 3" sclass="viewRow">
+								<label width="100%" sclass="labelNSGrayNormal"
+								       value="${labels.listing.productStatus}:" />
+								<label sclass="labelNSBlackNormal" width="90%"
+								       value="@load(vm.transaction.listingInterest.listing.productStatus.name)" />
+							</row>
+							<row spans="1, 3" sclass="viewRow">
+								<label width="100%" sclass="labelNSGrayNormal"
+								       value="${labels.listing.productPurchaseDate}:" />
+								<label value="@load(vm.transaction.listingInterest.listing.purchaseDate) @converter('formatedDate', format='dd/MM/yyyy')"
+								       sclass="labelNSBlackNormal" width="90%" />
+							</row>
+							<row spans="1, 3" sclass="viewRow">
+								<label width="100%" sclass="labelNSGrayNormal"
+								       value="${labels.listing.productPrice}:" />
+								<label value="@load(vm.transaction.listingInterest.listing.price) @converter('formatedNumber', format='###,##0.00')"
+								       sclass="labelNSBlackNormal"
+								       width="90%" />
+							</row>
+							<row spans="1, 3" sclass="viewRow">
+								<label width="100%" sclass="labelNSGrayNormal" value="${labels.listing.owner}:" />
+								<label value="@load(vm.transaction.listingInterest.listing.user.fullName)"
+								       sclass="labelNSBlackNormal" width="90%" />
+							</row>
+							<row spans="1, 3" sclass="viewRow">
+								<label width="100%" sclass="labelNSGrayNormal" value="${labels.listing.buyer}:" />
+								<label value="@load(vm.transaction.listingInterest.user.fullName)"
+								       sclass="labelNSBlackNormal" width="90%" />
+							</row>
+							<row spans="1, 3" sclass="viewRow">
+								<label width="100%" sclass="labelNSGrayNormal"
+								       value="${labels.listing.productComments}:" />
+								<label value="@load(vm.transaction.listingInterest.listing.comments)"
+								       sclass="labelNSBlackNormal" width="90%" />
+							</row>
+							<row spans="1, 3" sclass="viewRow">
+								<label width="100%" sclass="labelNSGrayNormal" value="${labels.listing.ownerRating}:" />
+								<hbox>
+									<h:div class="rateitowner"></h:div>
+									<space />
+									<label value="(" />
+									<label value="@load(vm.transaction.listingInterest.listing.user.averageTransactionRating) @converter('formatedNumber', format='###,##0.00')"
+									       sclass="labelNSBlackNormal" width="90%" />
+									<label value=")" />
+								</hbox>
+							</row>
+							<row spans="1, 3" sclass="viewRow">
+								<label width="100%" sclass="labelNSGrayNormal"
+								       value="${labels.listingInterest.finalBuyerRating}:" />
+								<hbox>
+									<h:div class="rateitinter"></h:div>
+									<space />
+									<label value="(" />
+									<label value="@load(vm.transaction.listingInterest.user.averageTransactionRating) @converter('formatedNumber', format='###,##0.00')"
+									       sclass="labelNSBlackNormal" width="90%" />
+									<label value=")" />
+								</hbox>
+							</row>
+						</rows>
+					</grid>
+				</div>
+			</hlayout>
+			<separator height="20px" />
+		</div>
+	</div>
+	<style src="/js/rateit/rateit.css" />
+	<script src="/js/rateit/jquery.rateit.js"></script>
+</window>

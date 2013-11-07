@@ -1,0 +1,276 @@
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/zul/templates/main_template.zul"?>
+<?page viewport="width=device-width, initial-scale=0.5, user-scalable=yes"?>
+<?page title="${labels.template.title}"?>
+<?root-attributes lang="en"xml:lang="en"?>
+<window xmlns="http://www.zkoss.org/2005/zul"
+        self="@define(detail)"
+        border="none"
+        width="1200px"
+        apply="org.zkoss.bind.BindComposer"
+        viewModel="@id('vm') @init('org.teiath.web.vm.trg.CopyListingVM')"
+        validationMessages="@id('vmsgs')">
+
+	<style>
+		tr.z-row-over > td.z-row-inner {
+		border-bottom: 1px solid #FFFFFF;
+		border-top: 1px solid #FFFFFF;
+		}
+
+		tr.z-row-over > td.z-row-inner, tr.z-row-over > .z-cell {
+		background-image: none;
+		}
+	</style>
+	<div form="@id('fx') @load(vm.newListing) @save(vm.newListing, before='onSave')" sclass="detail">
+		<div align="left" width="99%">
+			<hbox width="100%" widths="@load(not empty fx.id? '50%, 50%': '50%, 50%')">
+				<label sclass="headerText" value="${labels.listing.copy}" />
+				<div width="100%" style="text-align: right">
+					<toolbarbutton image="/img/save.png" onClick="@command('onSave')" />
+					<toolbarbutton image="/img/cancel.png" onClick="@command('onCancel')" />
+				</div>
+			</hbox>
+			<separator height="20px" />
+			<tabbox height="800px">
+				<tabs id="tabs">
+					<tab label="${labels.listing.inputs}" />
+					<tab id="photoTab" label="${labels.listing.productPhotos}" />
+				</tabs>
+				<tabpanels>
+					<tabpanel>
+						<hlayout width="1100px">
+							<vlayout id="photoLayout" width="300px">
+								<div>
+									<vbox id="photoVBox">
+
+									</vbox>
+								</div>
+								<label value="Η κύρια φωτογραφία της αγγελίας" />
+								<space height="5px" />
+								<hlayout>
+									<toolbarbutton id="btnUploadMainImage" upload="true,maxsize=300"
+									               image="/img/upload.png"
+									               onUpload="@command('uploadMainImage')" />
+									<toolbarbutton id="btnDeleteMainImage" image="/img/delete.png"
+									               onClick="@command('deleteMainImage')" />
+								</hlayout>
+							</vlayout>
+							<space width="50px" />
+							<div width="800px" style="padding-top: 5px">
+								<grid width="800px" oddRowSclass="non-odd" style="border: 0">
+									<columns>
+										<column width="30%" />
+										<column width="70%" />
+									</columns>
+									<rows>
+										<row sclass="viewRow">
+											<label width="100%" sclass="labelNSGrayNormal"
+											       value="${labels.listing.transactionType}:" />
+											<vbox>
+												<hbox>
+													<combobox id="typesCombo" model="@load(vm.transactionTypes)"
+													          constraint="no empty: Το πεδίο θα πρέπει να συμπληρωθεί υποχρεωτικά"
+													          selectedItem="@bind(fx.transactionType)"
+													          width="99%" tabindex="2"
+													          onSelect="@command('togglePrice')">
+														<template name="model" var="item">
+															<comboitem label="@load(item.name)" />
+														</template>
+													</combobox>
+												</hbox>
+											</vbox>
+										</row>
+										<row sclass="viewRow" id="exchangeRow" visible="false">
+											<vbox>
+												<label value="Επιθυμητό προϊόν:" />
+												<textbox id="tradeableGoodNameBox" maxlength="200" width="200px"
+												         tabindex="1" mold="rounded" />
+												<toolbarbutton image="/img/addElement.png"
+												               onClick="@command('addTradeableGood')" />
+												<toolbarbutton id="removeBtn" image="/img/delete.png"
+												               onClick="@command('removeTradeableGood')" />
+											</vbox>
+											<listbox id="desiredGoodsBox" model="@load(vm.tradeableGoods)"
+											         width="300px"
+											         selectedItem="@bind(vm.selectedGood)">
+												<listhead>
+													<listheader label="${labels.common.goods}"></listheader>
+												</listhead>
+												<template name="model">
+													<listitem>
+														<listcell label="${each.name }" />
+													</listitem>
+												</template>
+											</listbox>
+										</row>
+										<row>
+											<separator height="50px"/>
+										</row>
+										<row spans="2">
+											<label value="Στοιχεία Αγαθού προς διάθεση" style="font-size: 18px" width="90%" />
+										</row>
+										<row>
+											<separator height="5px"/>
+										</row>
+										<row sclass="viewRow">
+											<label width="100%" sclass="labelNSGrayNormal"
+											       value="${labels.listing.productCategory}:" />
+											<vbox>
+												<combobox width="230px" readonly="true"
+												          constraint="no empty: Το πεδίο θα πρέπει να συμπληρωθεί υποχρεωτικά"
+												          id="parentCategoryCombo"
+												          onSelect="@command('onSelectParentCategory')">
+													<comboitem id="appliances" value="1"
+													           label="${labels.value.whiteAppliances}" />
+													<comboitem id="electronics" value="2"
+													           label="${labels.value.electronics}" />
+													<comboitem id="furniture" value="3"
+													           label="${labels.value.furniture}" />
+													<comboitem id="books" value="4" label="${labels.value.books}" />
+													<comboitem id="various" value="5" label="${labels.value.various}" />
+												</combobox>
+												<hbox>
+													<combobox id="childCategoryCombo" readonly="true" model="@load(vm.categories)"
+													          constraint="no empty: Το πεδίο θα πρέπει να συμπληρωθεί υποχρεωτικά"
+													          selectedItem="@bind(vm.selectedCategory)"  width="230px" tabindex="2">
+														<template name="model" var="item">
+															<comboitem label="@load(item.name)" />
+														</template>
+													</combobox>
+												</hbox>
+											</vbox>
+										</row>
+										<row sclass="viewRow">
+											<label width="100%" sclass="labelNSGrayNormal"
+											       value="${labels.listing.productName}:" />
+											<vbox>
+												<hbox>
+													<textbox maxlength="200" width="200px" tabindex="1" mold="rounded"
+													         value="@bind(fx.productName)"
+													         constraint="no empty: Το πεδίο θα πρέπει να συμπληρωθεί υποχρεωτικά" />
+												</hbox>
+											</vbox>
+										</row>
+										<row sclass="viewRow">
+											<label width="100%" sclass="labelNSGrayNormal"
+											       value="${labels.listing.productBrand}:" />
+											<vbox>
+												<hbox>
+													<textbox maxlength="200" width="200px" tabindex="1" mold="rounded"
+													         value="@bind(fx.productBrand)" />
+												</hbox>
+											</vbox>
+										</row>
+										<row sclass="viewRow">
+											<label width="100%" sclass="labelNSGrayNormal"
+											       value="${labels.listing.productDescription}:" />
+											<vbox>
+												<hbox>
+													<textbox rows="4" multiline="true" maxlength="300" width="500px"
+													         tabindex="1" mold="rounded"
+													         value="@bind(fx.productDescription)"
+													         constraint="no empty: Το πεδίο θα πρέπει να συμπληρωθεί υποχρεωτικά" />
+												</hbox>
+											</vbox>
+										</row>
+										<row sclass="viewRow">
+											<label width="100%" sclass="labelNSGrayNormal"
+											       value="${labels.listing.productStatus}:" />
+											<vbox>
+												<hbox>
+													<combobox readonly="true" model="@load(vm.productStatuses)"
+													          constraint="no empty: Το πεδίο θα πρέπει να συμπληρωθεί υποχρεωτικά"
+													          selectedItem="@bind(fx.productStatus)"
+													          width="99%" tabindex="2">
+														<template name="model" var="item">
+															<comboitem label="@load(item.name)" />
+														</template>
+													</combobox>
+												</hbox>
+											</vbox>
+										</row>
+										<row sclass="viewRow">
+											<label width="100%" sclass="labelNSGrayNormal"
+											       value="${labels.listing.productPurchaseYear}:" />
+											<vbox>
+												<hbox>
+													<datebox
+															constraint="no future,no empty: Το πεδίο θα πρέπει να συμπληρωθεί υποχρεωτικά"
+															id="date" cols="12"
+															format="short" mold="rounded" width="230px"
+															value="@bind(fx.purchaseDate)" />
+												</hbox>
+											</vbox>
+										</row>
+										<row sclass="viewRow" id="priceRow" visible="true">
+											<label id="productPrice" width="100%" sclass="labelNSGrayNormal"
+											       value="${labels.listing.productPrice}:" />
+											<vbox>
+												<hbox>
+													<decimalbox value="@bind(fx.price)"
+													            format="#,##0.##"
+													            constraint="no negative" />
+													<combobox readonly="true" model="@load(vm.currencies)"
+													          selectedItem="@bind(fx.currency)"
+													          width="50%">
+														<template name="model" var="item">
+															<comboitem label="@load(item.name)" />
+														</template>
+													</combobox>
+													<label width="100%" sclass="labelNSGrayNormal"
+													       value="${labels.listing.priceTooltip}" />
+												</hbox>
+											</vbox>
+										</row>
+										<row sclass="viewRow">
+											<label width="100%" sclass="labelNSGrayNormal"
+											       value="${labels.listing.sendHome}:" />
+											<vbox>
+												<hbox>
+													<checkbox id="sendHome" checked="@bind(fx.sendHome)" />
+												</hbox>
+											</vbox>
+										</row>
+										<row sclass="viewRow">
+											<label width="100%" sclass="labelNSGrayNormal"
+											       value="${labels.listing.enabled}:" />
+											<vbox>
+												<hbox>
+													<checkbox id="enableListing" checked="@bind(fx.enabled)" />
+												</hbox>
+											</vbox>
+										</row>
+
+										<row sclass="viewRow">
+												<label width="100%" sclass="labelNSGrayNormal"
+												       value="${labels.listing.productComments}:" />
+												<textbox id="comment" rows="4" multiline="true" maxlength="300"
+													        width="500px"
+													        tabindex="1" mold="rounded" value="@bind(fx.comments)" />
+										</row>
+									</rows>
+								</grid>
+							</div>
+						</hlayout>
+					</tabpanel>
+					<tabpanel>
+						<toolbarbutton id="btnUpload" upload="true,maxsize=300" image="/img/upload.png"
+						               onUpload="@command('onImageUpload')" />
+						<toolbarbutton id="btnDelete" image="/img/delete.png" disabled="true"
+						               onClick="@command('onDelete')" />
+						<toolbarbutton id="btnView" image="/img/view.png" disabled="true" onClick="@command('onView')" />
+						<separator height="5px" />
+						<listbox id="photosListbox" width="10%" context="contextPopup" onSelect="@command('onSelect')"
+						         visible="false">
+							<listhead>
+								<listheader id="photoPreview" label="Προεπισκόπηση" width="100%" />
+							</listhead>
+						</listbox>
+
+					</tabpanel>
+				</tabpanels>
+			</tabbox>
+		</div>
+	</div>
+
+</window>

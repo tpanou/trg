@@ -1,0 +1,271 @@
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/zul/templates/main_template.zul"?>
+<?page viewport="width=device-width, initial-scale=0.5, user-scalable=yes"?>
+<?page title="${labels.template.title}"?>
+<?root-attributes lang="en"xml:lang="en"?>
+<?link rel="shortcut icon" type="image/x-icon" href="/img/logo.png"?>
+<?link rel="icon" type="image/x-icon" href="/img/logo.png"?>
+<window xmlns="http://www.zkoss.org/2005/zul" xmlns:h="http://www.w3.org/1999/xhtml"
+        self="@define(detail)"
+        border="none"
+        width="1200px"
+        apply="org.zkoss.bind.BindComposer"
+        viewModel="@id('vm') @init('org.teiath.web.vm.trg.ViewInterestSellerVM')"
+		>
+
+	<zscript><![CDATA[
+
+      import java.util.Comparator;
+      import org.teiath.web.comparator.ListboxEmptyComparator;
+
+      Comparator comparator = new ListboxEmptyComparator();
+  ]]></zscript>
+
+	<script>
+		function doLoad(ownerval) {
+		$('.rateitowner').rateit({
+		step: 1,
+		starwidth: 16,
+		starheight: 16,
+		readonly: true,
+		value: ownerval
+		});
+		}
+	</script>
+
+	<style>
+		tr.z-row-over > td.z-row-inner {
+		border-bottom: 1px dotted #434E9E;
+		border-top: 1px dotted #434E9E;
+		}
+
+		tr.z-row-over > td.z-row-inner, tr.z-row-over > .z-cell {
+		background-image: none;
+		}
+	</style>
+	<div sclass="detail">
+		<div align="left" width="99%">
+			<hbox width="100%" widths="50%, 50%">
+				<label sclass="headerText" value="${labels.listingInterest.view}" />
+				<div width="100%" style="text-align: right">
+					<toolbarbutton image="/img/back.png" onClick="@command('onBack')" />
+				</div>
+			</hbox>
+			<separator height="20px" />
+			<tabbox height="800px">
+				<tabs id="tabs">
+					<tab label="${labels.listingInterest.interested}" />
+					<tab id="tradeableGoodTab" label="${labels.listingInterest.tradeableGood}" visible="false" />
+				</tabs>
+				<tabpanels>
+					<tabpanel>
+						<grid style="border: 0">
+							<columns>
+								<column width="20%" />
+								<column width="30%" />
+								<column width="20%" />
+								<column width="30%" />
+							</columns>
+							<rows>
+								<row spans="1, 3" sclass="viewRow">
+									<label width="100%" sclass="labelNSGrayNormal"
+									       value="${labels.listingInterest.userPhoto}" />
+									<image id="userPhoto" height="128px" width="128px" />
+								</row>
+								<row spans="1, 3" sclass="viewRow">
+									<label width="100%" sclass="labelNSGrayNormal"
+									       value="${labels.listingInterest.userLastname}:" />
+									<label value="@load(vm.listingInterest.user.lastName)" sclass="labelNSBlackNormal"
+									       width="90%" />
+								</row>
+								<row spans="1, 3" sclass="viewRow">
+									<label width="100%" sclass="labelNSGrayNormal"
+									       value="${labels.listingInterest.userΝame}:" />
+									<label value="@load(vm.listingInterest.user.firstName)" sclass="labelNSBlackNormal"
+									       width="90%" />
+								</row>
+								<row spans="1, 3" sclass="viewRow">
+									<label width="100%" sclass="labelNSGrayNormal" value="${labels.user.email}:" />
+									<label value="@load(vm.listingInterest.user.email)" sclass="labelNSBlackNormal"
+									       width="90%" />
+								</row>
+								<row spans="1, 3" sclass="viewRow">
+									<label width="100%" sclass="labelNSGrayNormal" value="${labels.user.mobile}:" />
+									<label value="@load(vm.listingInterest.user.mobileNumber)"
+									       sclass="labelNSBlackNormal"
+									       width="90%" />
+								</row>
+								<row spans="1, 3" sclass="viewRow">
+									<label width="100%" sclass="labelNSGrayNormal" value="${labels.user.telephone}:" />
+									<label value="@load(vm.listingInterest.user.phoneNumber)"
+									       sclass="labelNSBlackNormal"
+									       width="90%" />
+								</row>
+								<row spans="1, 3" sclass="viewRow">
+									<label width="100%" sclass="labelNSGrayNormal"
+									       value="${labels.user.statusUnemployed}:" />
+									<label id="statusLabel" sclass="labelNSBlackNormal" width="90%" />
+								</row>
+								<row spans="1, 3" sclass="viewRow">
+									<label width="100%" sclass="labelNSGrayNormal" value="${labels.common.amea}:" />
+									<label id="ameaLabel" sclass="labelNSBlackNormal" width="90%" />
+								</row>
+								<row spans="1, 3" sclass="viewRow">
+									<label width="100%" sclass="labelNSGrayNormal"
+									       value="${labels.listingInterest.commnents}:" />
+									<label sclass="labelNSBlackNormal" width="90%"
+									       value="@load(vm.listingInterest.comment)" />
+								</row>
+								<row spans="1, 3" sclass="viewRow">
+									<label width="100%" sclass="labelNSGrayNormal"
+									       value="${labels.listingInterest.buyerRating}:" />
+									<hbox>
+										<h:div class="rateitowner"></h:div>
+										<space />
+										<label value="(" />
+										<label value="@load(vm.listingInterest.user.averageTransactionRating) @converter('formatedNumber', format='###,##0.00')"
+										       sclass="labelNSBlackNormal" width="90%" />
+										<label value=")" />
+									</hbox>
+								</row>
+								<row spans="1, 3" sclass="viewRow" id="commentsListBoxRow">
+									<label width="100%" sclass="labelNSGrayNormal"
+									       value="${labels.reservation.comments}" />
+									<listbox model="@load(vm.userTransactionsComments)" id="passengerCommentsListbox"
+									         width="99%"
+									         context="contextPopup">
+										<listhead>
+											<listheader label="${labels.reservation.user}" width="30%" />
+											<listheader label="${labels.reservation.comment}" width="40%" />
+											<listheader label="${labels.reservation.commentDate}" width="30%" />
+										</listhead>
+										<template name="model" var="item">
+											<listitem>
+												<listcell label="${item.user.fullName}" />
+												<listcell label="${item.comment}" />
+												<listcell
+														label="@load(item.assessmentDate) @converter('formatedDate', format='dd/MM/yyyy')" />
+											</listitem>
+										</template>
+									</listbox>
+								</row>
+								<row spans="1, 3" sclass="viewRow" id="commentsLabelRow" visible="false">
+									<label width="100%" sclass="labelNSGrayNormal"
+									       value="${labels.lisintg.detailedComments}" />
+									<label value="${labels.reservation.noCommnets}"></label>
+								</row>
+								<row spans="1, 3" sclass="viewRow" id="listBoxRow" visible="true">
+									<label width="99%" sclass="labelNSGrayNormal"
+									       value="${labels.listingInterest.olderTransactions}" />
+									<listbox model="@load(vm.commonListings)" paginal="@{paging}"
+									         id="commonListingsListbox"
+									         width="99%"
+									         context="contextPopup">
+										<listhead>
+											<listheader id="code" label="${labels.listing.code}"
+											            width="20%"
+											            sortAscending="${comparator}"
+											            sortDescending="${comparator}" onSort="@command('onSort')" />
+											<listheader id="productCategory" label="${labels.listing.productCategory}"
+											            width="20%"
+											            sortAscending="${comparator}"
+											            sortDescending="${comparator}" onSort="@command('onSort')" />
+											<listheader id="productName" label="${labels.listing.productName}"
+											            width="20%"
+											            sortAscending="${comparator}"
+											            sortDescending="${comparator}" onSort="@command('onSort')" />
+											<listheader id="transactionType" label="${labels.listing.transactionType}"
+											            width="20%"
+											            sortAscending="${comparator}" sortDescending="${comparator}"
+											            onSort="@command('onSort')" />
+											<listheader id="productStatus" label="${labels.listing.productStatus}"
+											            width="20%"
+											            sortAscending="${comparator}" sortDescending="${comparator}"
+											            onSort="@command('onSort')" />
+										</listhead>
+										<template name="model" var="item">
+											<listitem>
+												<listcell label="@load(item.code)" />
+												<listcell label="@load(item.productCategory.name)" />
+												<listcell label="@load(item.productName)" />
+												<listcell label="@load(item.transactionType.name)" />
+												<listcell label="@load(item.productStatus.name)" />
+											</listitem>
+										</template>
+									</listbox>
+								</row>
+								<row spans="1, 3" id="pagingRow" sclass="viewRow">
+									<label width="99%" sclass="labelNSGrayNormal" />
+									<paging mold="os" width="99%" id="paging" pageSize="10" detailed="true"
+									        onPaging="@command('onPaging')" />
+								</row>
+								<row spans="1, 3" sclass="viewRow" id="labelRow" visible="false">
+									<label width="100%" sclass="labelNSGrayNormal"
+									       value="${labels.listingInterest.olderTransactions}" />
+									<label value="${labels.listing.noListings}"></label>
+								</row>
+							</rows>
+						</grid>
+					</tabpanel>
+					<tabpanel id="tradeableGoodTabPanel" visible="false">
+						<separator height="10px" />
+						<hlayout width="100%">
+							<div style="border: 1px solid black">
+								<vbox id="photoVBox">
+
+								</vbox>
+							</div>
+							<space width="5px" />
+							<div style="padding-top: 5px">
+								<label value="@load(vm.listingInterest.tradeableGood.name)" style="font-size: 30px"
+								       width="90%" />
+								<separator height="20px" />
+								<grid id="grid" style="border: 0">
+									<columns>
+										<column width="20%" />
+										<column width="80%" />
+									</columns>
+									<rows>
+										<row sclass="viewRow">
+											<label width="100%" sclass="labelNSGrayNormal"
+											       value="${labels.listing.productDescription}:" />
+											<label value="@load(vm.listingInterest.tradeableGood.description)"
+											       sclass="labelNSBlackNormal" width="90%" />
+										</row>
+										<row sclass="viewRow">
+											<label width="100%" sclass="labelNSGrayNormal"
+											       value="${labels.listing.productBrand}:" />
+											<label value="@load(vm.listingInterest.tradeableGood.brand)"
+											       sclass="labelNSBlackNormal" width="90%" />
+										</row>
+										<row sclass="viewRow">
+											<label width="100%" sclass="labelNSGrayNormal"
+											       value="${labels.listing.productPurchaseDate}:" />
+											<label id="flexibleLabel"
+											       value="@load(vm.listingInterest.tradeableGood.purchaseDate) @converter('formatedDate', format='dd/MM/yyyy')"
+											       sclass="labelNSBlackNormal" width="90%" />
+										</row>
+										<row sclass="viewRow">
+											<label width="100%" sclass="labelNSGrayNormal"
+											       value="${labels.listing.productStatus}:" />
+											<label id="days" sclass="labelNSBlackNormal" width="90%"
+											       value="@load(vm.listingInterest.tradeableGood.productStatus.name)" />
+										</row>
+										<row id="priceRow" sclass="viewRow" visible="true">
+											<label width="100%" sclass="labelNSGrayNormal"
+											       value="${labels.listingInterest.comment}:" />
+											<label value="@load(vm.listingInterest.tradeableGood.comments)"
+											       sclass="labelNSBlackNormal" width="90%" />
+										</row>
+									</rows>
+								</grid>
+							</div>
+						</hlayout>
+					</tabpanel>
+				</tabpanels>
+			</tabbox>
+		</div>
+	</div>
+	<style src="/js/rateit/rateit.css" />
+	<script src="/js/rateit/jquery.rateit.js"></script>
+</window>
